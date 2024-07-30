@@ -4,7 +4,10 @@ services:
     hazelcast:
         image: docker.io/hazelcast/hazelcast:${HZ_VERSION}
         ports:
-            - "5701:5701"
+        - "5701-5703:5701"
+        deploy:
+            replicas: 3
+            endpoint_mode: dnsrr
         environment:
             - HZ_MANAGEMENTCENTER_CONSOLEENABLED=true
             - HZ_MANAGEMENTCENTER_SCRIPTINGENABLED=true
@@ -44,9 +47,12 @@ services:
       depends_on:
          - postgres
       deploy:
-         resources:
+         resources:        
             limits:
-               memory: 600mb
+               memory: 1024M
+            reservations:
+               cpus: '2'
+               memory: 1024M
 
     management-center:
       image: "docker.io/hazelcast/management-center-flow:${MC_FLOW_VERSION}"

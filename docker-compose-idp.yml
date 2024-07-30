@@ -42,9 +42,12 @@ services:
       depends_on:
          - postgres
       deploy:
-         resources:
+         resources:        
             limits:
-               memory: 600mb
+               memory: 1024M
+            reservations:
+               cpus: '2'
+               memory: 1024M
 
     management-center:
       image: "docker.io/hazelcast/management-center-flow:${MC_FLOW_VERSION}"
