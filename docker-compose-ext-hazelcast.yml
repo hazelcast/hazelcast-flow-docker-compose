@@ -66,7 +66,7 @@ services:
       environment:
         - JAVA_OPTS=-Dhazelcast.mc.flow.address=http://localhost:9021 -Dhazelcast.mc.flow.internalAddress=http://hazelcast-flow:9021
         - MC_DEFAULT_CLUSTER=flow
-        - MC_DEFAULT_CLUSTER_MEMBERS=hazelcast-flow-demos-hazelcast-flow-1:25701
+        - MC_DEFAULT_CLUSTER_MEMBERS=hazelcast-flow-hazelcast-flow-1:25701
         - MC_LICENSE=${MC_LICENSE}
         - MC_INIT_CMD=./bin/mc-conf.sh security reset 
 
