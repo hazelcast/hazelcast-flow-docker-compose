@@ -12,7 +12,7 @@ services:
             - HZ_MANAGEMENTCENTER_CONSOLEENABLED=true
             - HZ_MANAGEMENTCENTER_SCRIPTINGENABLED=true
 
-    hazelcast-flow:
+    flow:
       image: docker.io/hazelcast/hazelcast-flow:${FLOW_VERSION}
       healthcheck:
         test: curl --fail http://localhost:9021/api/actuator/health || exit 1
@@ -20,6 +20,7 @@ services:
         timeout: 5s
         retries: 3
       environment:
+         MC_LICENSE: "${MC_LICENSE}"
          JAVA_OPTS: >-
             -Xms256m
             -Xmx1024m
@@ -66,9 +67,9 @@ services:
       environment:
         - JAVA_OPTS=-Dhazelcast.mc.flow.address=http://localhost:9021 -Dhazelcast.mc.flow.internalAddress=http://hazelcast-flow:9021
         - MC_DEFAULT_CLUSTER=flow
-        - MC_DEFAULT_CLUSTER_MEMBERS=hazelcast-flow-hazelcast-flow-1:25701
+        - MC_DEFAULT_CLUSTER_MEMBERS=flow:25701
         - MC_LICENSE=${MC_LICENSE}
-        - MC_INIT_CMD=./bin/mc-conf.sh security reset 
+        - MC_INIT_CMD=./bin/mc-conf.sh security reset
 
     postgres:
       image: postgres:15
