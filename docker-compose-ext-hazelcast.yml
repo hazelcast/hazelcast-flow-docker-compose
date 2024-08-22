@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
     hazelcast:
-        image: docker.io/hazelcast/hazelcast:${HZ_VERSION}
+        image: docker.io/hazelcast/hazelcast:${HZ_VERSION:-latest}
         ports:
         - "5701-5703:5701"
         deploy:
@@ -13,7 +13,7 @@ services:
             - HZ_MANAGEMENTCENTER_SCRIPTINGENABLED=true
 
     flow:
-      image: docker.io/hazelcast/hazelcast-flow:${FLOW_VERSION}
+      image: docker.io/hazelcast/hazelcast-flow:${FLOW_VERSION:-latest}
       healthcheck:
         test: curl --fail http://localhost:9021/api/actuator/health || exit 1
         interval: 30s
@@ -56,7 +56,7 @@ services:
                memory: 1024M
 
     management-center:
-      image: docker.io/hazelcast/management-center-flow:${MC_FLOW_VERSION}
+      image: docker.io/hazelcast/management-center-flow:${MC_VERSION:-latest}
       ports:
         - "8080:8080"
       healthcheck:
