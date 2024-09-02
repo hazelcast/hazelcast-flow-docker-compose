@@ -1,14 +1,15 @@
 version: "3.3"
 
 services:
-    hazelcast-flow:
-      image: docker.io/hazelcast/hazelcast-flow:${FLOW_VERSION}
+    flow:
+      image: docker.io/hazelcast/hazelcast-flow:${FLOW_VERSION:-latest}
       healthcheck:
         test: curl --fail http://localhost:9021/api/actuator/health || exit 1
         interval: 30s
         timeout: 5s
         retries: 3
       environment:
+         MC_LICENSE: "${MC_LICENSE}"
          JAVA_OPTS: >-
             -Xms256m
             -Xmx1024m
@@ -42,7 +43,7 @@ services:
                memory: 1024M
 
     management-center:
-      image: "docker.io/hazelcast/management-center-flow:${MC_FLOW_VERSION}"
+      image: docker.io/hazelcast/management-center-flow:${MC_VERSION:-latest}
       ports:
         - "8080:8080"
       healthcheck:
@@ -51,11 +52,11 @@ services:
         timeout: 5s
         retries: 3
       environment:
-        - JAVA_OPTS=-Dhazelcast.mc.flow.address=http://localhost:9021 -Dhazelcast.mc.flow.internalAddress=http://hazelcast-flow:9021
+        - JAVA_OPTS=-Dhazelcast.mc.flow.address=http://localhost:9021 -Dhazelcast.mc.flow.internalAddress=http://flow:9021
         - MC_DEFAULT_CLUSTER=flow
-        - MC_DEFAULT_CLUSTER_MEMBERS=hazelcast-flow-hazelcast-flow-1:25701
+        - MC_DEFAULT_CLUSTER_MEMBERS=flow:25701
         - MC_LICENSE=${MC_LICENSE}
-        - MC_INIT_CMD=./bin/mc-conf.sh security reset 
+        - MC_INIT_CMD=./bin/mc-conf.sh security reset
 
     postgres:
       image: postgres:15
@@ -69,13 +70,14 @@ services:
          POSTGRES_PASSWORD: changeme
       volumes:
          - postgres_data:/var/lib/postgresql/data
-      prometheus:
-         image: prom/prometheus:v2.53.1
-         container_name: prometheus
-         hostname: prometheus
-         ports:
-         - 9090:9090
-         volumes:
+
+    prometheus:
+       image: prom/prometheus:v2.53.1
+       container_name: prometheus
+       hostname: prometheus
+       ports:
+        - 9090:9090
+       volumes:
          - type: bind
            source: ./prometheus.yml
            target: /etc/prometheus/prometheus.yml
