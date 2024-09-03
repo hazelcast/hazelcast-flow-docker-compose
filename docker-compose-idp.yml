@@ -9,6 +9,7 @@ services:
         timeout: 5s
         retries: 3
       environment:
+         VYNE_SECURITY_OPENIDP_SCOPE: "openid email profile"
          MC_LICENSE: "${MC_LICENSE}"
          JAVA_OPTS: >-
             -Xms256m
