@@ -34,12 +34,13 @@ docker-compose -f docker-compose-idp.yml up
 
 Here is a list of available files and the dependencies they use.
 
-| File                                   | Description                                                   |
-|----------------------------------------|---------------------------------------------------------------|
-| docker-compose.yml                     | FLow, Postgres and Management Center (default)                |
-| docker-compose-idp.yml                 | Default + OIDC configured                                     |
-| docker-compose-ext-hazelcast.yml       | Default + external hazelcast installation                     |
-| docker-compose-prometheus.yml          | Default + Prometheus setup                                    |
+| File                                           | Description                                                       |
+|------------------------------------------------|-------------------------------------------------------------------|
+| docker-compose.yml                             | Flow, Postgres and Management Center (default)                    |
+| docker-compose-idp.yml                         | Default + OIDC configured                                         |
+| docker-compose-idp-local-sec-preconfigured.yml | Default + OIDC configured + local security provider preconfigured |
+| docker-compose-ext-hazelcast.yml               | Default + external hazelcast installation                         |
+| docker-compose-prometheus.yml                  | Default + Prometheus setup                                        |
 
 Some exposed endpoints:
 - http://localhost:9021 - Hazelcast Flow UI
