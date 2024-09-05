@@ -13,7 +13,7 @@ services:
             - HZ_MANAGEMENTCENTER_SCRIPTINGENABLED=true
 
     flow:
-      image: docker.io/hazelcast/hazelcast-flow:${FLOW_VERSION:-latest}
+      image: docker.io/hazelcast/hazelcast-flow:${FLOW_VERSION:-latest-snapshot}
       healthcheck:
         test: curl --fail http://localhost:9021/api/actuator/health || exit 1
         interval: 30s
