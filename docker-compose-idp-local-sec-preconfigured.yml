@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
     flow:
-      image: docker.io/hazelcast/hazelcast-flow:${FLOW_VERSION:-latest-snapshot}
+      image: docker.io/hazelcast/hazelcast-flow:${FLOW_VERSION:-latest}
       healthcheck:
         test: curl --fail http://localhost:9021/api/actuator/health || exit 1
         interval: 30s
@@ -65,7 +65,7 @@ services:
         - MC_DEFAULT_CLUSTER_MEMBERS=flow:25701
         - MC_LICENSE=${MC_LICENSE}
         - MC_APPLICATION_CLIENT_SECRET=${MC_APPLICATION_CLIENT_SECRET}
-        - MC_INIT_CMD=./bin/mc-conf.sh security reset
+        - MC_INIT_CMD=./bin/mc-conf.sh security reset && ./bin/mc-conf.sh user create -n admin -r admin -p "changeMe!135" && ./bin/mc-conf.sh user create -n user -r readwrite -p "changeMe!135" && ./bin/mc-conf.sh user create -n readonly -r readonly -p "changeMe!135" && ./bin/mc-conf.sh user create -n metricsonly -r metricsonly -p "changeMe!135"
 
     postgres:
       image: postgres:15
