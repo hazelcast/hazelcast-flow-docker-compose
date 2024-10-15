@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
     flow:
-      image: docker.io/hazelcast/hazelcast-flow:${FLOW_VERSION:-latest-snapshot}
+      image: quay.io/hazelcast_cloud/hazelcast-flow-internal:next
       healthcheck:
         test: curl --fail http://localhost:9021/api/actuator/health || exit 1
         interval: 30s
@@ -29,21 +29,27 @@ services:
             --flow.security.open-idp.roles.format=path
             --flow.security.open-idp.roles.path=roles
             --flow.security.open-idp.refreshTokensDisabled=true
+            --flow.schema.server.clustered=true
+            --flow.hazelcast.configYamlPath=/opt/hazelcast/config_ext/hazelcast.yml
             --flow.config.custom.managementCenterUrl=http://localhost:8080
             --flow.workspace.project-file=/opt/service/workspace/taxi.conf
 #            If you're using a workspace, rather than a single-project config,
 #           use this option.
 #            --flow.workspace.config-file=/opt/service/workspace/workspace.conf
       ports:
-         - "9021:9021"
+        - "9021-9023:9021"
       expose:
          - 9021
       volumes:
          - ~/.hazelcast/flow/license/:/opt/var/flow/license/
          - ./workspace:/opt/service/workspace
+         - type: bind
+           source: ./hazelcast.yml
+           target: /opt/hazelcast/config_ext/hazelcast.yml
       depends_on:
          - postgres
       deploy:
+         replicas: 3
          resources:        
             limits:
                memory: 1024M
@@ -52,7 +58,7 @@ services:
                memory: 1024M
 
     management-center:
-      image: docker.io/hazelcast/management-center-flow:${MC_VERSION:-latest}
+      image: quay.io/hazelcast_cloud/management-center-flow:latest
       ports:
         - "8080:8080"
       healthcheck:
@@ -61,7 +67,7 @@ services:
         timeout: 5s
         retries: 3
       environment:
-        - JAVA_OPTS=-Dhazelcast.mc.flow.addresses=http://localhost:9021 -Dhazelcast.mc.flow.internalAddress=http://flow:9021
+        - JAVA_OPTS=-Dhazelcast.mc.flow.addresses=http://localhost:9021,http://localhost:9022,http://localhost:9023 -Dhazelcast.mc.flow.internalAddress=http://flow:9021
         - MC_DEFAULT_CLUSTER=flow
         - MC_DEFAULT_CLUSTER_MEMBERS=flow:25701
         - MC_LICENSE=${MC_LICENSE}
