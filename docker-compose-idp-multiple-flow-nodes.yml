@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
     flow:
-      image: quay.io/hazelcast_cloud/hazelcast-flow-internal:next
+      image: docker.io/hazelcast/hazelcast-flow:${FLOW_VERSION:-latest-snapshot}
       healthcheck:
         test: curl --fail http://localhost:9021/api/actuator/health || exit 1
         interval: 30s
@@ -58,7 +58,7 @@ services:
                memory: 1024M
 
     management-center:
-      image: quay.io/hazelcast_cloud/management-center-flow:latest
+      image: docker.io/hazelcast/management-center-flow:${MC_VERSION:-latest}
       ports:
         - "8080:8080"
       healthcheck:
