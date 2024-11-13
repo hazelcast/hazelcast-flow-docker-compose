@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
     flow:
-      image: docker.io/hazelcast/hazelcast-flow:${FLOW_VERSION:-latest-snapshot}
+      image: docker.io/hazelcast/hazelcast-flow:${FLOW_VERSION:-latest}
       healthcheck:
         test: curl --fail http://localhost:9021/api/actuator/health || exit 1
         interval: 30s
